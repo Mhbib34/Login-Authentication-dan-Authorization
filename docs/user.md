@@ -21,8 +21,9 @@ POST /auth/register
 ```json
 {
   "username": "string",
-  "email": "string",
-  "password": "string"
+  "name": "string",
+  "password": "string",
+  "email": "string"
 }
 ```
 
@@ -32,9 +33,9 @@ POST /auth/register
 {
   "message": "User registered successfully",
   "user": {
-    "id": "string",
     "username": "string",
-    "email": "string"
+    "email": "string",
+    "name": "string"
   }
 }
 ```

@@ -17,7 +17,7 @@ export const register = async (request) => {
 
   user.password = await bcrypt.hash(user.password, 10);
 
-  return prismaClient.user.create({
+  const result = await prismaClient.user.create({
     data: user,
     select: {
       username: true,
@@ -25,4 +25,9 @@ export const register = async (request) => {
       email: true,
     },
   });
+
+  return {
+    message: "User registered successfully",
+    user: result,
+  };
 };

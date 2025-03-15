@@ -7,7 +7,7 @@ describe("POST /auth/register", function () {
     await removeTestUser();
   });
 
-  it("Should dan create new user", async () => {
+  it("Should can create new user", async () => {
     const result = await supertest(web).post("/auth/register").send({
       username: "test",
       name: "test",
@@ -16,10 +16,10 @@ describe("POST /auth/register", function () {
     });
 
     expect(result.status).toBe(200);
-    expect(result.body.data.username).toBe("test");
-    expect(result.body.data.name).toBe("test");
-    expect(result.body.data.password).toBeUndefined();
-    expect(result.body.data.email).toBe("test@gmail.com");
+    expect(result.body.user.username).toBe("test");
+    expect(result.body.user.name).toBe("test");
+    expect(result.body.user.password).toBeUndefined();
+    expect(result.body.user.email).toBe("test@gmail.com");
   });
 
   it("Should reject if request is invalid", async () => {
@@ -28,6 +28,30 @@ describe("POST /auth/register", function () {
       name: "test",
       password: "",
       email: "",
+    });
+
+    expect(result.status).toBe(400);
+  });
+
+  it("should reject if username already registered", async () => {
+    let result = await supertest(web).post("/auth/register").send({
+      username: "test",
+      password: "rahasia",
+      name: "test",
+      email: "test@gmail.com",
+    });
+
+    expect(result.status).toBe(200);
+    expect(result.body.user.username).toBe("test");
+    expect(result.body.user.name).toBe("test");
+    expect(result.body.user.email).toBe("test@gmail.com");
+    expect(result.body.user.password).toBeUndefined();
+
+    result = await supertest(web).post("/auth/register").send({
+      username: "test",
+      password: "rahasia",
+      name: "test",
+      email: "test@gmail.com",
     });
 
     expect(result.status).toBe(400);

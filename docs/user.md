@@ -135,7 +135,6 @@ Authorization: Bearer <accessToken>
 
 ```json
 {
-  "id": "string",
   "username": "string",
   "email": "string"
 }

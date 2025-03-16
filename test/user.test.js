@@ -84,3 +84,42 @@ describe("POST /auth/login", function () {
     expect(result.status).toBe(400);
   });
 });
+
+describe("POST /auth/refresh", function () {
+  beforeEach(async () => {
+    await createTestUser();
+  });
+  afterEach(async () => {
+    await removeTestUser();
+  });
+  it("Should can refresh token", async () => {
+    const login = await supertest(web).post("/auth/login").send({
+      email: "test@gmail.com",
+      password: "rahasia",
+    });
+
+    const refreshToken = login.body.refreshToken;
+
+    const result = await supertest(web)
+      .post("/auth/refresh")
+      .send({ refreshToken });
+
+    expect(result.status).toBe(200);
+    expect(result.body.accessToken).toBeDefined();
+  });
+
+  it("Should reject if token is invalid", async () => {
+    const login = await supertest(web).post("/auth/login").send({
+      email: "test@gmail.com",
+      password: "rahasia",
+    });
+
+    const refreshToken = "invalid_refresh_token";
+
+    const result = await supertest(web)
+      .post("/auth/refresh")
+      .send({ refreshToken });
+
+    expect(result.status).toBe(403);
+  });
+});

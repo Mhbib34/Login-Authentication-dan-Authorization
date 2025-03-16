@@ -95,7 +95,7 @@ export const refreshToken = async (token) => {
   }
 
   const existingUser = await prismaClient.user.findUnique({
-    where: { refreshToken },
+    where: { refreshToken: token },
     select: { email: true },
   });
 

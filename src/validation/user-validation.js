@@ -11,3 +11,5 @@ export const loginUserValidation = Joi.object({
   email: Joi.string().max(100).required(),
   password: Joi.string().max(100).required(),
 });
+
+export const getUserValidation = Joi.string().max(100).required();

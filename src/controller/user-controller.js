@@ -1,4 +1,9 @@
-import { login, register, refreshToken } from "../services/user-service.js";
+import {
+  login,
+  register,
+  refreshToken,
+  get,
+} from "../services/user-service.js";
 
 const registerHandler = async (req, res, next) => {
   try {
@@ -18,10 +23,21 @@ const loginUserHandler = async (req, res, next) => {
   }
 };
 
-export const refreshTokenHandler = async (req, res, next) => {
+const refreshTokenHandler = async (req, res, next) => {
   try {
     const result = await refreshToken(req.body.refreshToken);
     res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserHandler = async (req, res, next) => {
+  try {
+    const result = await get(req.user.username);
+    res.status(200).json({
+      user: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -31,4 +47,5 @@ export default {
   register: registerHandler,
   login: loginUserHandler,
   refreshToken: refreshTokenHandler,
+  get: getUserHandler,
 };

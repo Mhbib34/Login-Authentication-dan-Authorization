@@ -122,7 +122,7 @@ POST /auth/logout
 **Endpoint:**
 
 ```
-GET /users/me
+GET /auth/profile
 ```
 
 **Headers:**
@@ -136,7 +136,8 @@ Authorization: Bearer <accessToken>
 ```json
 {
   "username": "string",
-  "email": "string"
+  "email": "string",
+  "name": "String"
 }
 ```
 

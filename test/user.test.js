@@ -123,3 +123,40 @@ describe("POST /auth/refresh", function () {
     expect(result.status).toBe(403);
   });
 });
+
+describe("GET /auth/profile", function () {
+  let accessToken;
+
+  beforeEach(async () => {
+    await createTestUser();
+
+    const loginResponse = await supertest(web)
+      .post("/auth/login")
+      .send({ email: "test@gmail.com", password: "rahasia" });
+
+    accessToken = loginResponse.body.accessToken;
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("Should can get user", async () => {
+    const result = await supertest(web)
+      .get("/auth/profile")
+      .set("Authorization", `Bearer ${accessToken}`);
+
+    expect(result.status).toBe(200);
+    expect(result.body.user.username).toBe("test");
+    expect(result.body.user.name).toBe("test");
+    expect(result.body.user.email).toBe("test@gmail.com");
+  });
+
+  it("Should reject if access token is invalid", async () => {
+    const result = await supertest(web)
+      .get("/auth/profile")
+      .set("Authorization", `Bearer asda`);
+
+    expect(result.status).toBe(403);
+  });
+});

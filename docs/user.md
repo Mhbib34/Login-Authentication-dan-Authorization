@@ -96,22 +96,25 @@ POST /auth/refresh
 **Endpoint:**
 
 ```
-POST /auth/logout
+DELETE /auth/logout
 ```
 
-**Request Body:**
+Headers :
+-Authorization : token
 
-```json
-{
-  "refreshToken": "string"
-}
-```
-
-**Response:**
+**Response success:**
 
 ```json
 {
   "message": "Logout successful"
+}
+```
+
+**Response error:**
+
+```json
+{
+  "errors": "Unauthorized"
 }
 ```
 

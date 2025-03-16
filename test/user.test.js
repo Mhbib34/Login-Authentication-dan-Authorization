@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { createTestUser, removeTestUser } from "./test.util.js";
+import { createTestUser, getTestUser, removeTestUser } from "./test.util.js";
 import { web } from "../src/application/web.js";
 
 describe("POST /auth/register", function () {
@@ -155,6 +155,43 @@ describe("GET /auth/profile", function () {
   it("Should reject if access token is invalid", async () => {
     const result = await supertest(web)
       .get("/auth/profile")
+      .set("Authorization", `Bearer asda`);
+
+    expect(result.status).toBe(403);
+  });
+});
+
+describe("DELETE /auth/logout", function () {
+  let accessToken;
+
+  beforeEach(async () => {
+    await createTestUser();
+
+    const loginResponse = await supertest(web)
+      .post("/auth/login")
+      .send({ email: "test@gmail.com", password: "rahasia" });
+
+    accessToken = loginResponse.body.accessToken;
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("Should can logout", async () => {
+    const result = await supertest(web)
+      .delete("/auth/logout")
+      .set("Authorization", `Bearer ${accessToken}`);
+
+    expect(result.status).toBe(200);
+    expect(result.body.message).toBe("Logout successfully");
+    const testUser = await getTestUser();
+    expect(testUser.refreshToken).toBeNull();
+  });
+
+  it("Should reject if accessToken is invalid", async () => {
+    const result = await supertest(web)
+      .delete("/auth/logout")
       .set("Authorization", `Bearer asda`);
 
     expect(result.status).toBe(403);

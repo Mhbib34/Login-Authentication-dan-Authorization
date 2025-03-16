@@ -3,6 +3,7 @@ import {
   register,
   refreshToken,
   get,
+  logout,
 } from "../services/user-service.js";
 
 const registerHandler = async (req, res, next) => {
@@ -42,10 +43,22 @@ const getUserHandler = async (req, res, next) => {
     next(error);
   }
 };
+const logoutUserHandler = async (req, res, next) => {
+  try {
+    const user = req.user.username;
+    const result = await logout(user);
+    res.status(200).json({
+      message: "Logout successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export default {
   register: registerHandler,
   login: loginUserHandler,
   refreshToken: refreshTokenHandler,
   get: getUserHandler,
+  logout: logoutUserHandler,
 };

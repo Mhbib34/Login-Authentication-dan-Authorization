@@ -139,3 +139,15 @@ export const get = async (username) => {
   }
   return user;
 };
+
+export const logout = async (username) => {
+  try {
+    return await prismaClient.user.update({
+      where: { username },
+      data: { refreshToken: null }, // Menghapus refresh token
+    });
+  } catch (error) {
+    console.error("❌ Error saat logout:", error);
+    throw new Error("Logout failed");
+  }
+};

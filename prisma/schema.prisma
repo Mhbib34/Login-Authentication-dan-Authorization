@@ -18,7 +18,7 @@ model User {
   username String @id @db.VarChar(100) @unique
   email String @db.VarChar(100) @unique
   name String? @db.VarChar(100)
-  password String @db.VarChar(100)
+  password String? @db.VarChar(100)
   refreshToken String? @db.VarChar(500) @unique
 
 @@map("users")

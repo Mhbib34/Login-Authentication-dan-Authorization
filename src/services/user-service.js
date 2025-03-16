@@ -4,6 +4,7 @@ import {
   getUserValidation,
   loginUserValidation,
   registerUserValidation,
+  updateUserValidation,
 } from "../validation/user-validation.js";
 import validate from "../validation/validation.js";
 import bcrypt from "bcrypt";
@@ -19,6 +20,9 @@ export const register = async (request) => {
 
   if (countUser > 0) {
     throw new ResponseError(400, "Username already exists");
+  }
+  if (!user.password) {
+    throw new ResponseError(400, "Password cannot be empty");
   }
 
   user.password = await bcrypt.hash(user.password, 10);
@@ -144,10 +148,42 @@ export const logout = async (username) => {
   try {
     return await prismaClient.user.update({
       where: { username },
-      data: { refreshToken: null }, // Menghapus refresh token
+      data: { refreshToken: null },
     });
   } catch (error) {
-    console.error("❌ Error saat logout:", error);
     throw new Error("Logout failed");
   }
+};
+
+export const update = async (request) => {
+  const user = validate(updateUserValidation, request);
+  const totalUserInDatabase = await prismaClient.user.count({
+    where: {
+      username: user.username,
+    },
+  });
+
+  if (totalUserInDatabase !== 1) {
+    throw new ResponseError(404, "user is not found");
+  }
+
+  const data = {};
+  if (user.name) {
+    data.name = user.name;
+  }
+  if (user.password) {
+    data.password = await bcrypt.hash(user.password, 10);
+  }
+
+  return prismaClient.user.update({
+    where: {
+      username: user.username,
+    },
+    data: data,
+    select: {
+      username: true,
+      name: true,
+      email: true,
+    },
+  });
 };

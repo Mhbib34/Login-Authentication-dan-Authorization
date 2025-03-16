@@ -4,6 +4,7 @@ import {
   refreshToken,
   get,
   logout,
+  update,
 } from "../services/user-service.js";
 
 const registerHandler = async (req, res, next) => {
@@ -55,10 +56,24 @@ const logoutUserHandler = async (req, res, next) => {
   }
 };
 
+const updateUserHandler = async (req, res, next) => {
+  try {
+    const username = req.user.username;
+    const request = req.body;
+    request.username = username;
+    const result = await update(request);
+    res.status(200).json({
+      user: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export default {
   register: registerHandler,
   login: loginUserHandler,
   refreshToken: refreshTokenHandler,
   get: getUserHandler,
   logout: logoutUserHandler,
+  update: updateUserHandler,
 };

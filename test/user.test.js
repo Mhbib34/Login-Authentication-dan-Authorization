@@ -197,3 +197,57 @@ describe("DELETE /auth/logout", function () {
     expect(result.status).toBe(403);
   });
 });
+
+describe("PUT /auth/profile", function () {
+  let accessToken;
+
+  beforeEach(async () => {
+    await createTestUser();
+
+    const loginResponse = await supertest(web)
+      .post("/auth/login")
+      .send({ email: "test@gmail.com", password: "rahasia" });
+
+    accessToken = loginResponse.body.accessToken;
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+  it("Should can update user", async () => {
+    const result = await supertest(web)
+      .put("/auth/profile")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send({
+        name: "test baru",
+        password: "rahasia baru",
+      });
+
+    expect(result.status).toBe(200);
+    expect(result.body.data.name).toBe("test baru");
+  });
+
+  it("Should reject if accessToken is not valid", async () => {
+    const result = await supertest(web)
+      .put("/auth/profile")
+      .set("Authorization", `Bearer asdsa`)
+      .send({
+        name: "test baru",
+        password: "rahasia baru",
+      });
+
+    expect(result.status).toBe(403);
+  });
+
+  it("Should reject if request is invalid", async () => {
+    const result = await supertest(web)
+      .put("/auth/profile")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send({
+        name: "",
+        password: "rahasia baru",
+      });
+
+    expect(result.status).toBe(400);
+  });
+});

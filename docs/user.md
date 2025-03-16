@@ -159,3 +159,54 @@ Authorization: Bearer <accessToken>
   "message": "Access denied"
 }
 ```
+
+### 6. Update User Profile (Protected Route)
+
+**Endpoint:**
+
+```
+PUT /auth/profile
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <accessToken>
+```
+
+**Request Body:**
+
+```json
+{
+  "username": "String",
+  "name": "String",
+  "email": "String",
+  "password": "String"
+}
+```
+
+**Response:**
+
+```json
+{
+  "username": "string",
+  "email": "string",
+  "name": "String"
+}
+```
+
+## Error Responses
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "Invalid credentials"
+}
+```
+
+```json
+{
+  "error": "Forbidden",
+  "message": "Access denied"
+}
+```

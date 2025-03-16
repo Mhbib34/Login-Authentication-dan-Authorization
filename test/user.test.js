@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { removeTestUser } from "./test.util.js";
+import { createTestUser, removeTestUser } from "./test.util.js";
 import { web } from "../src/application/web.js";
 
 describe("POST /auth/register", function () {
@@ -54,6 +54,33 @@ describe("POST /auth/register", function () {
       email: "test@gmail.com",
     });
 
+    expect(result.status).toBe(400);
+  });
+});
+
+describe("POST /auth/login", function () {
+  beforeEach(async () => {
+    await createTestUser();
+  });
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("Should can login", async () => {
+    const result = await supertest(web).post("/auth/login").send({
+      email: "test@gmail.com",
+      password: "rahasia",
+    });
+    expect(result.status).toBe(200);
+    expect(result.body.refreshToken).toBeDefined();
+    expect(result.body.refreshToken).not.toBe("test");
+  });
+
+  it("Should reject if request is invalid", async () => {
+    const result = await supertest(web).post("/auth/login").send({
+      email: "",
+      password: "",
+    });
     expect(result.status).toBe(400);
   });
 });

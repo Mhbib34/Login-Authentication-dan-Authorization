@@ -61,7 +61,7 @@ POST /auth/login
 
 ```json
 {
-  "message": "Login successful",
+  "message": "Login successfuly",
   "accessToken": "string",
   "refreshToken": "string"
 }

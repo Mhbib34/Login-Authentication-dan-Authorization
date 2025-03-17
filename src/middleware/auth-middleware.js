@@ -31,8 +31,6 @@ export const authMiddleware = async (req, res, next) => {
   const token = authHeader.split(" ")[1];
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_SECRET);
-    console.log("🔍 Decoded token:", decoded);
-
     const user = await prismaClient.user.findUnique({
       where: { email: decoded.email },
     });
@@ -42,9 +40,7 @@ export const authMiddleware = async (req, res, next) => {
         .status(403)
         .json({ errors: "Forbidden", message: "Access denied" });
     }
-    console.log("✅ User dari Token:", user);
     req.user = user;
-
     next();
   } catch (error) {
     return res

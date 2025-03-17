@@ -171,7 +171,7 @@ export const update = async (request) => {
   if (user.name) {
     data.name = user.name;
   }
-  if (user.password) {
+  if (user.password && user.password.trim() !== "") {
     data.password = await bcrypt.hash(user.password, 10);
   }
 

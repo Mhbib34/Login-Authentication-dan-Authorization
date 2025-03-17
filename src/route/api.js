@@ -9,6 +9,6 @@ userRouter.post("/auth/login", userController.login);
 userRouter.post("/auth/refresh", userController.refreshToken);
 userRouter.get("/auth/profile", authMiddleware, userController.get);
 userRouter.delete("/auth/logout", authMiddleware, userController.logout);
-userRouter.put("/auth/profile", authMiddleware, userController.update);
+userRouter.patch("/auth/profile", authMiddleware, userController.update);
 
 export default userRouter;

@@ -17,6 +17,6 @@ export const getUserValidation = Joi.string().max(100).required();
 export const updateUserValidation = Joi.object({
   username: Joi.string().max(100).required(),
   email: Joi.string().max(100).optional(),
-  name: Joi.string().max(100).required(),
-  password: Joi.string().max(100).optional(),
+  name: Joi.string().max(100).allow("").optional(),
+  password: Joi.string().max(100).allow("").optional(),
 });

@@ -216,7 +216,7 @@ describe("PUT /auth/profile", function () {
   });
   it("Should can update user", async () => {
     const result = await supertest(web)
-      .put("/auth/profile")
+      .patch("/auth/profile")
       .set("Authorization", `Bearer ${accessToken}`)
       .send({
         name: "test baru",
@@ -229,7 +229,7 @@ describe("PUT /auth/profile", function () {
 
   it("Should reject if accessToken is not valid", async () => {
     const result = await supertest(web)
-      .put("/auth/profile")
+      .patch("/auth/profile")
       .set("Authorization", `Bearer asdsa`)
       .send({
         name: "test baru",
@@ -237,17 +237,5 @@ describe("PUT /auth/profile", function () {
       });
 
     expect(result.status).toBe(403);
-  });
-
-  it("Should reject if request is invalid", async () => {
-    const result = await supertest(web)
-      .put("/auth/profile")
-      .set("Authorization", `Bearer ${accessToken}`)
-      .send({
-        name: "",
-        password: "rahasia baru",
-      });
-
-    expect(result.status).toBe(400);
   });
 });
